@@ -11,8 +11,12 @@ REPOS = [
 ]
 
 
+DECOR = re.compile(r'(综合|高清|超清|标清|频道|纯享|冨二代|富二代)$')
+
 def norm(s):
-    return re.sub(r'[^a-z0-9一-鿿]', '', s.lower())
+    s = re.sub(r'[^a-z0-9一-鿿]', '', s.lower())
+    s2 = DECOR.sub('', s)
+    return s2 if s2 else s
 
 
 def fetch(url):
@@ -38,6 +42,9 @@ for repo in REPOS:
     try:
         for name, url in parse(fetch(repo)):
             key = next((k for k in merged if norm(k) == norm(name)), name)
+            if key in merged and len(name) < len(key):
+                merged[name] = merged.pop(key)   # 保留更短的主名（CCTV1 而非 CCTV1 综合）
+                key = name
             merged.setdefault(key, [])
             if url not in merged[key] and len(merged[key]) < 3:
                 merged[key].append(url)
