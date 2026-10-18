@@ -22,3 +22,5 @@ jobs:
           git add iptv.m3u
           git diff --cached --quiet || git commit -m "daily: $(date -u +%F) aggregate"
           git push
+      - name: purge cdn
+        run: curl -sf https://purge.jsdelivr.net/gh/xinghui/iptv-daily@main/iptv.m3u -o /dev/null || true
