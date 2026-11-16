@@ -42,11 +42,16 @@ def parse(text):
         if line.startswith('#EXTINF'):
             name = line.split(',')[-1].strip()
             name = re.sub(r'\[[^\]]*\]', '', name).replace('✓', '').replace('已核验', '').strip()
+            name = re.sub(r'\s*\([^()]*\)$', '', name).strip()
         elif line and not line.startswith('#'):
             if name:
                 out.append((name, line))
     return out
 
+
+EXTRA_SOURCES = {
+    'CCTV1': ['http://74.91.26.218:82/live/cctv1hd.m3u8'],
+}
 
 merged = {}
 for repo in REPOS:
@@ -104,6 +109,14 @@ def group_of(name):
         return '卫视频道'
     return '其他频道'
 
+# ---- 合入保底源 ----
+for name, urls in EXTRA_SOURCES.items():
+    key = next((k for k in merged if norm(k) == norm(name)), name)
+    merged.setdefault(key, [])
+    for u in urls:
+        if u not in merged[key]:
+            merged[key].insert(0, u)
+
 # ---- 源验证（并发）----
 import concurrent.futures
 
@@ -116,9 +129,44 @@ with concurrent.futures.ThreadPoolExecutor(40) as ex:
 from collections import Counter
 print(Counter(verdicts.values()))
 
-RANK = {'live': 0, 'unknown': 1, 'vod': 2, 'dead': 9}
+def codec_ok(url):
+    """探测首个分片：h264+aac 为电视网页播放器友好"""
+    import subprocess
+    try:
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        t = urllib.request.urlopen(req, timeout=6).read(30000).decode('utf-8', 'replace')
+        seg = next((l.strip() for l in t.splitlines() if l.strip() and not l.startswith('#')), None)
+        if not seg:
+            return None
+        from urllib.parse import urljoin
+        seg = urljoin(url, seg)
+        r = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'stream=codec_name',
+                            '-of', 'csv=p=0', seg], capture_output=True, text=True, timeout=10)
+        c = r.stdout
+        return ('aac' in c and 'h264' in c)
+    except Exception:
+        return None
+
+# 对主要频道（央视/卫视）的 live 源做编码探测，aac 优先
+MAIN_PREFIX = ('CCTV', '央视')
+codec_rank = {}
+main_urls = []
+for name, urls in merged.items():
+    if name.upper().startswith(MAIN_PREFIX[0]) or '央视' in name:
+        main_urls.extend(u for u in urls if verdicts.get(u) == 'live')
+print(f'codec probing {len(main_urls)} main live urls...')
+with concurrent.futures.ThreadPoolExecutor(20) as ex:
+    for u, ok in zip(main_urls, ex.map(codec_ok, main_urls)):
+        if ok is True:
+            codec_rank[u] = 'aac'
+        elif ok is False:
+            codec_rank[u] = 'noaac'
+from collections import Counter as _C
+print('codec:', _C(codec_rank.values()))
+
+RANK = {'aac': 0, 'live': 1, 'unknown': 2, 'vod': 3, 'dead': 9}
 for name in merged:
-    merged[name].sort(key=lambda u: RANK.get(verdicts.get(u, 'unknown'), 1))
+    merged[name].sort(key=lambda u: RANK.get(codec_rank.get(u) or verdicts.get(u, 'unknown'), 2))
 
 lines = ['#EXTM3U']
 total = 0
