@@ -16,9 +16,16 @@ REPOS = [
 DECOR = re.compile(r'(综合|高清|超清|标清|频道|纯享|冨二代|富二代)$')
 
 def norm(s):
-    s = re.sub(r'\([^()]*\)', '', s.lower())     # 括号段整体去掉：(720p)（高清）等
-    s = re.sub(r'\d{3,4}[pi]', '', s)               # 裸画质标记：720p/1080i
-    s = re.sub(r'[^a-z0-9一-鿿]', '', s)
+    t = re.sub(r'\([^()]*\)', '', s.lower())     # 括号段整体去掉：(720p)（高清）等
+    t = re.sub(r'\d{3,4}[pi]', '', t)               # 裸画质标记：720p/1080i
+    m = re.match(r'^(cctv|央视)[-_ ]?(\d{1,2})\s*(\+|plus)?', t)
+    if m:
+        return 'cctv' + m.group(2) + ('+' if m.group(3) else '')
+    if re.match(r'^(cctv|央视)[-_ ]?4k', t):
+        return 'cctv4k'
+    if re.match(r'^(cctv|央视)[-_ ]?8k', t):
+        return 'cctv8k'
+    s = re.sub(r'[^a-z0-9一-鿿]', '', t)
     s2 = DECOR.sub('', s)
     return s2 if s2 else s
 
@@ -152,7 +159,7 @@ from collections import Counter
 print(Counter(verdicts.values()))
 
 def codec_ok(url):
-    """探测首个分片：h264+aac 为电视网页播放器友好"""
+    """探测首个分片：h264+aac 且非隔行为电视网页播放器友好"""
     import subprocess
     try:
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
@@ -165,7 +172,16 @@ def codec_ok(url):
         r = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'stream=codec_name',
                             '-of', 'csv=p=0', seg], capture_output=True, text=True, timeout=10)
         c = r.stdout
-        return ('aac' in c and 'h264' in c)
+        if not ('aac' in c and 'h264' in c):
+            return False
+        # 隔行检测（1080i 老电视网页解码器放不出画面）
+        r2 = subprocess.run(['ffmpeg', '-v', 'info', '-i', seg, '-frames:v:0', '10',
+                             '-vf', 'idet', '-an', '-f', 'null', '-'],
+                            capture_output=True, text=True, timeout=25)
+        m = re.search(r'TFF:\s*(\d+) BFF:\s*(\d+) Progressive:\s*(\d+)', r2.stderr)
+        if m and (int(m.group(1)) + int(m.group(2))) > 4:
+            return False   # 隔行流
+        return True
     except Exception:
         return None
 
