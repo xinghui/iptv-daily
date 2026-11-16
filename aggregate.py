@@ -5,8 +5,10 @@ import urllib.request
 
 REPOS = [
     'https://raw.githubusercontent.com/vbskycn/iptv/master/tv/iptv4.m3u',
+    'https://raw.githubusercontent.com/jamsluuuuu/iptv/main/china-hk-mo-tw-live.m3u',
     'https://raw.githubusercontent.com/best-fan/iptv-sources/master/cn_all.m3u8',
     'https://raw.githubusercontent.com/TianmuTNT/iptv/main/iptv.m3u',
+    'https://iptv-zb-zy.pages.dev/output/ipv4/result.m3u',
     'https://raw.githubusercontent.com/zilong7728/Collect-IPTV/main/best_sorted.m3u',
 ]
 
@@ -20,9 +22,17 @@ def norm(s):
 
 
 def fetch(url):
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return r.read().decode('utf-8', 'replace')
+    import time as _t
+    last = None
+    for i in range(3):
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return r.read().decode('utf-8', 'replace')
+        except Exception as e:
+            last = e
+            _t.sleep(2 * (i + 1))
+    raise last
 
 
 def parse(text):
@@ -31,6 +41,7 @@ def parse(text):
         line = line.strip()
         if line.startswith('#EXTINF'):
             name = line.split(',')[-1].strip()
+            name = re.sub(r'\[[^\]]*\]', '', name).replace('✓', '').replace('已核验', '').strip()
         elif line and not line.startswith('#'):
             if name:
                 out.append((name, line))

@@ -19,7 +19,7 @@ jobs:
         run: |
           git config user.name "iptv-bot"
           git config user.email "bot@users.noreply.github.com"
-          git pull --rebase origin main
+          git pull --rebase --autostash origin main
           git add iptv.m3u
           git diff --cached --quiet || git commit -m "daily: $(date -u +%F) aggregate"
           git push
