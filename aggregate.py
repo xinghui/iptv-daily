@@ -138,7 +138,7 @@ YSP_GW = "http://192.168.50.219:8123"   # mb0 上常驻的官方流清洗网关�
 
 def gw_ysp(u):
     """ysp 官方流改走局域网网关（Safari A/B 实验证实：私有标签导致老播放器首帧卡死，清洗后可播）"""
-    m = re.match(r"https?://([a-z0-9.-]*ysp\.cctv\.cn)/([^?\s]+)", u)
+    m = re.match(r"https?://([a-z0-9.-]*(?:ysp\.cctv\.cn|cztv\.com))/([^?\s]+)", u)
     return YSP_GW + "/h/" + m.group(1) + "/" + m.group(2) if m else u
 
 
