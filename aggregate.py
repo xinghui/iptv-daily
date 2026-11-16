@@ -213,8 +213,18 @@ from collections import Counter as _C
 print('codec:', _C(codec_rank.values()))
 
 RANK = {'aac': 0, 'live': 1, 'unknown': 2, 'noaac': 3, 'vod': 4, 'dead': 9}
+
+
+def sort_key(u):
+    if 'gitv.tv' in u:
+        return (RANK['noaac'], 1)   # 已知隔行源黑名单（1080i，老Tizen画面冻+马赛克）
+    r = RANK.get(codec_rank.get(u) or verdicts.get(u, 'unknown'), 2)
+    ysp_first = 0 if re.match(r'https?://[a-z0-9.-]*ysp\.cctv\.cn', u) else 1  # 网关源同级优先
+    return (r, ysp_first)
+
+
 for name in merged:
-    merged[name].sort(key=lambda u: RANK.get(codec_rank.get(u) or verdicts.get(u, 'unknown'), 2))
+    merged[name].sort(key=sort_key)
 
 lines = ['#EXTM3U']
 total = 0
