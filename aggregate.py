@@ -5,9 +5,9 @@ import urllib.request
 
 REPOS = [
     'https://raw.githubusercontent.com/vbskycn/iptv/master/tv/iptv4.m3u',
-    'https://raw.githubusercontent.com/suxuang/myIPTV/main/ipv4.m3u',
-    'https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/result.m3u',
-    'https://raw.githubusercontent.com/suxuang/myIPTV/main/ipv6.m3u',
+    'https://raw.githubusercontent.com/best-fan/iptv-sources/master/cn_all.m3u8',
+    'https://raw.githubusercontent.com/TianmuTNT/iptv/main/iptv.m3u',
+    'https://raw.githubusercontent.com/zilong7728/Collect-IPTV/main/best_sorted.m3u',
 ]
 
 

@@ -1,7 +1,7 @@
 name: daily-aggregate
 on:
   schedule:
-    - cron: '23 21 * * *'   # 每天 UTC 21:23（北京 05:23）
+    - cron: '23 9,21 * * *'   # 每天 UTC 21:23（北京 05:23）
   workflow_dispatch:
 
 permissions:
