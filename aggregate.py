@@ -202,7 +202,7 @@ with concurrent.futures.ThreadPoolExecutor(20) as ex:
 from collections import Counter as _C
 print('codec:', _C(codec_rank.values()))
 
-RANK = {'aac': 0, 'live': 1, 'unknown': 2, 'vod': 3, 'dead': 9}
+RANK = {'aac': 0, 'live': 1, 'unknown': 2, 'noaac': 3, 'vod': 4, 'dead': 9}
 for name in merged:
     merged[name].sort(key=lambda u: RANK.get(codec_rank.get(u) or verdicts.get(u, 'unknown'), 2))
 
