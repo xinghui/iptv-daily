@@ -213,7 +213,8 @@ for g in ('央视频道', '卫视频道', '其他频道'):
     for n, u in sorted(chans, key=lambda x: sort_key(x[0])):
         if group_of(n) != g:
             continue
-        kept = [x for x in u if verdicts.get(x) != 'dead'][:5]
+        EXTRA_SET = set(u2 for lst in EXTRA_SOURCES.values() for u2 in lst)
+        kept = [x for x in u if verdicts.get(x) != 'dead' or x in EXTRA_SET][:5]
         if not kept:
             continue
         total += 1
