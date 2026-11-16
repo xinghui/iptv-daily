@@ -130,6 +130,16 @@ def sort_key(n):
     return (2, 0, 0, n)
 
 
+
+
+YSP_GW = "http://192.168.50.219:8123"   # mb0 上常驻的官方流清洗网关（剥QQHLS私有标签，老Tizen可播）
+
+def gw_ysp(u):
+    """ysp 官方流改走局域网网关（Safari A/B 实验证实：私有标签导致老播放器首帧卡死，清洗后可播）"""
+    m = re.match(r"https?://([a-z0-9.-]*ysp\\.cctv\\.cn)/([^?\\s]+)", u)
+    return YSP_GW + "/h/" + m.group(1) + "/" + m.group(2) if m else u
+
+
 def group_of(name):
     up = name.upper()
     if 'CCTV' in up or '央视' in name:
@@ -220,7 +230,7 @@ for g in ('央视频道', '卫视频道', '其他频道'):
         total += 1
         lines.append(f'#EXTINF:-1 group-title="{g}",{n}')
         for url in kept:
-            lines.append(url)
+            lines.append(gw_ysp(url))
 with open('iptv.m3u', 'w', encoding='utf-8') as f:
     f.write('\n'.join(lines) + '\n')
 print(f'wrote iptv.m3u: {total} channels / {sum(len(v) for v in merged.values())} urls (validated, dead dropped)')
