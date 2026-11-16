@@ -1,0 +1,2 @@
+iptv.m3u merge=ours -diff
+channels.js merge=ours -diff
