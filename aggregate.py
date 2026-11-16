@@ -16,7 +16,9 @@ REPOS = [
 DECOR = re.compile(r'(综合|高清|超清|标清|频道|纯享|冨二代|富二代)$')
 
 def norm(s):
-    s = re.sub(r'[^a-z0-9一-鿿]', '', s.lower())
+    s = re.sub(r'\([^()]*\)', '', s.lower())     # 括号段整体去掉：(720p)（高清）等
+    s = re.sub(r'\d{3,4}[pi]', '', s)               # 裸画质标记：720p/1080i
+    s = re.sub(r'[^a-z0-9一-鿿]', '', s)
     s2 = DECOR.sub('', s)
     return s2 if s2 else s
 
@@ -101,6 +103,26 @@ def check(url):
         return 'live'  # 二次抓取失败不冤枉，保守按直播
 
 
+
+
+CCTV_NUM = re.compile(r'cctv[-_ ]?(\d+)(\+?)')
+PREF_WS = ['湖南', '浙江', '江苏', '东方', '北京', '广东', '深圳', '山东', '天津', '安徽', '江西', '湖北', '四川', '河南', '辽宁', '黑龙江']
+
+def sort_key(n):
+    up = n.upper()
+    if 'CCTV' in up or '央视' in n:
+        m = CCTV_NUM.search(n.lower())
+        if m:
+            return (0, int(m.group(1)), 1 if m.group(2) else 0, n)
+        return (0, 99, 0, n)
+    if '卫视' in n:
+        for i, w in enumerate(PREF_WS):
+            if w in n:
+                return (1, i, 0, n)
+        return (1, 50, 0, n)
+    return (2, 0, 0, n)
+
+
 def group_of(name):
     up = name.upper()
     if 'CCTV' in up or '央视' in name:
@@ -172,7 +194,7 @@ lines = ['#EXTM3U']
 total = 0
 for g in ('央视频道', '卫视频道', '其他频道'):
     chans = [(n, u) for n, u in merged.items() if u]
-    for n, u in sorted(chans, key=lambda x: x[0]):
+    for n, u in sorted(chans, key=lambda x: sort_key(x[0])):
         if group_of(n) != g:
             continue
         kept = [x for x in u if verdicts.get(x) != 'dead'][:5]
