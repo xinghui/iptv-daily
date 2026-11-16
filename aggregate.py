@@ -60,6 +60,8 @@ def parse(text):
 
 EXTRA_SOURCES = {
     'CCTV1': ['http://74.91.26.218:82/live/cctv1hd.m3u8'],
+    # [对照实验] 电视已知可播的 cztv 流走网关——判定网关传输层 vs ysp 内容
+    '浙江卫视': ['http://192.168.50.219:8123/h/ali-m-l.cztv.com/channels/lantian/channel07/1080p.m3u8'],
 }
 
 merged = {}
