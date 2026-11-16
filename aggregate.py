@@ -54,20 +54,35 @@ for repo in REPOS:
 
 
 def check(url):
-    """源验证：404/403=死；m3u8无ENDLIST=直播；有ENDLIST=点播；超时=未知(可能地域限制)"""
+    """源验证：404/403=死；真直播=窗口滚动（二次抓取确认）；静态录像/ENDLIST=点播降级"""
     import urllib.error
+    import time as _time
+
+    def _fetch(u):
+        req = urllib.request.Request(u, headers={'User-Agent': 'Mozilla/5.0'})
+        return urllib.request.urlopen(req, timeout=6).read(20000).decode('utf-8', 'replace')
+
     try:
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        t = urllib.request.urlopen(req, timeout=6).read(20000).decode('utf-8', 'replace')
-        if '#EXTM3U' in t or '#EXTINF' in t:
-            return 'vod' if '#EXT-X-ENDLIST' in t else 'live'
-        return 'unknown'
+        t1 = _fetch(url)
     except urllib.error.HTTPError as e:
-        if e.code in (403, 404, 410):
-            return 'dead'
-        return 'unknown'
+        return 'dead' if e.code in (403, 404, 410) else 'unknown'
     except Exception:
         return 'unknown'
+    if '#EXTM3U' not in t1 and '#EXTINF' not in t1:
+        return 'unknown'
+    if '#EXT-X-ENDLIST' in t1:
+        return 'vod'
+    s1 = re.search(r'MEDIA-SEQUENCE:(\d+)', t1)
+    if not s1:
+        return 'live'
+    _time.sleep(8)
+    try:
+        s2 = re.search(r'MEDIA-SEQUENCE:(\d+)', _fetch(url))
+        if s2 and int(s2.group(1)) > int(s1.group(1)):
+            return 'live'
+        return 'vod'   # SEQ 不滚动 = 录像伪装直播
+    except Exception:
+        return 'live'  # 二次抓取失败不冤枉，保守按直播
 
 
 def group_of(name):
