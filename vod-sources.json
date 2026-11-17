@@ -1,0 +1,92 @@
+{
+ "updated": "2026-11-17T10:12:26.165826Z",
+ "hosts": [
+  "155api.com",
+  "shayuapi.com",
+  "fhapi9.com",
+  "lbapi9.com",
+  "bfzyapi.com",
+  "cj.lzcaiji.com",
+  "dadiapi.com",
+  "cj.lziapi.com"
+ ],
+ "probed": 68,
+ "alive": 17,
+ "detail": [
+  {
+   "host": "155api.com",
+   "sec": 1.23,
+   "n": 18
+  },
+  {
+   "host": "shayuapi.com",
+   "sec": 1.28,
+   "n": 20
+  },
+  {
+   "host": "fhapi9.com",
+   "sec": 1.32,
+   "n": 17
+  },
+  {
+   "host": "lbapi9.com",
+   "sec": 1.34,
+   "n": 1
+  },
+  {
+   "host": "bfzyapi.com",
+   "sec": 1.41,
+   "n": 20
+  },
+  {
+   "host": "cj.lzcaiji.com",
+   "sec": 1.43,
+   "n": 20
+  },
+  {
+   "host": "dadiapi.com",
+   "sec": 1.45,
+   "n": 20
+  },
+  {
+   "host": "cj.lziapi.com",
+   "sec": 1.58,
+   "n": 20
+  },
+  {
+   "host": "apiyutu.com",
+   "sec": 1.71,
+   "n": 5
+  },
+  {
+   "host": "beiyong.slapibf.com",
+   "sec": 1.78,
+   "n": 20
+  },
+  {
+   "host": "apidanaizi.com",
+   "sec": 2.39,
+   "n": 4
+  },
+  {
+   "host": "api.zuidapi.com",
+   "sec": 2.46,
+   "n": 20
+  },
+  {
+   "host": "thzy1.me",
+   "sec": 3.04,
+   "n": 4
+  },
+  {
+   "host": "apilsbzy1.com",
+   "sec": 3.23,
+   "n": 5
+  },
+  {
+   "host": "zuidazy.me",
+   "sec": 3.33,
+   "n": 20
+  }
+ ]
+}

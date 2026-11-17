@@ -1,0 +1,34 @@
+name: vod-sources
+on:
+  schedule:
+    - cron: '41 1 * * *'   # 北京 09:41，避开设备高峰
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vod-sources
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python vod_sources.py
+      - name: commit
+        run: |
+          git config user.name "iptv-bot"
+          git config user.email "iptv-bot@users.noreply.github.com"
+          git config merge.ours.driver true
+          git pull --rebase --autostash origin main
+          git add vod-sources.json
+          git diff --cached --quiet || git commit -m "daily: vod sources refresh"
+          git push
+      - name: purge cdn
+        run: |
+          curl -sf "https://purge.jsdelivr.net/gh/xinghui/iptv-daily@main/vod-sources.json" -o /dev/null || true
+
