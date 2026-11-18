@@ -1,92 +1,92 @@
 {
- "updated": "2026-11-17T10:12:26.165826Z",
+ "updated": "2026-11-18T09:04:04.725825Z",
  "hosts": [
   "155api.com",
-  "shayuapi.com",
-  "fhapi9.com",
+  "ikunzyapi.com",
+  "beiyong.slapibf.com",
+  "api.zuidapi.com",
+  "zuidazy.me",
+  "xingba222.com",
   "lbapi9.com",
-  "bfzyapi.com",
-  "cj.lzcaiji.com",
-  "dadiapi.com",
-  "cj.lziapi.com"
+  "apilj.com"
  ],
  "probed": 68,
- "alive": 17,
+ "alive": 24,
  "detail": [
   {
    "host": "155api.com",
-   "sec": 1.23,
+   "sec": 0.28,
    "n": 18
   },
   {
-   "host": "shayuapi.com",
-   "sec": 1.28,
+   "host": "ikunzyapi.com",
+   "sec": 0.29,
+   "n": 1
+  },
+  {
+   "host": "beiyong.slapibf.com",
+   "sec": 0.29,
+   "n": 20
+  },
+  {
+   "host": "api.zuidapi.com",
+   "sec": 0.33,
+   "n": 20
+  },
+  {
+   "host": "zuidazy.me",
+   "sec": 0.5,
+   "n": 20
+  },
+  {
+   "host": "xingba222.com",
+   "sec": 0.59,
+   "n": 20
+  },
+  {
+   "host": "lbapi9.com",
+   "sec": 0.66,
+   "n": 1
+  },
+  {
+   "host": "apilj.com",
+   "sec": 0.74,
    "n": 20
   },
   {
    "host": "fhapi9.com",
-   "sec": 1.32,
+   "sec": 0.75,
    "n": 17
   },
   {
-   "host": "lbapi9.com",
-   "sec": 1.34,
-   "n": 1
-  },
-  {
-   "host": "bfzyapi.com",
-   "sec": 1.41,
+   "host": "shayuapi.com",
+   "sec": 0.79,
    "n": 20
   },
   {
-   "host": "cj.lzcaiji.com",
-   "sec": 1.43,
+   "host": "bfzyapi.com",
+   "sec": 0.8,
    "n": 20
   },
   {
    "host": "dadiapi.com",
-   "sec": 1.45,
+   "sec": 0.8,
    "n": 20
   },
   {
-   "host": "cj.lziapi.com",
-   "sec": 1.58,
-   "n": 20
+   "host": "jkunzyapi.com",
+   "sec": 0.98,
+   "n": 9
   },
   {
-   "host": "apiyutu.com",
-   "sec": 1.71,
-   "n": 5
-  },
-  {
-   "host": "beiyong.slapibf.com",
-   "sec": 1.78,
-   "n": 20
+   "host": "api.souavzyw.net",
+   "sec": 0.99,
+   "n": 2
   },
   {
    "host": "apidanaizi.com",
-   "sec": 2.39,
+   "sec": 1.16,
    "n": 4
-  },
-  {
-   "host": "api.zuidapi.com",
-   "sec": 2.46,
-   "n": 20
-  },
-  {
-   "host": "thzy1.me",
-   "sec": 3.04,
-   "n": 4
-  },
-  {
-   "host": "apilsbzy1.com",
-   "sec": 3.23,
-   "n": 5
-  },
-  {
-   "host": "zuidazy.me",
-   "sec": 3.33,
-   "n": 20
   }
  ]
 }
