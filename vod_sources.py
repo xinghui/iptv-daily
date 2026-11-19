@@ -10,6 +10,13 @@ SRC_CFG = "https://raw.githubusercontent.com/hafrey1/LunaTV-config/main/LunaTV-c
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Version/17.4 Safari/605.1.15"}
 KEEP = ("vod_id", "vod_name", "vod_pic", "vod_remarks", "vod_play_url",
         "vod_douban_score", "vod_area", "vod_year", "vod_class", "type_name")
+BAD_WORDS = ("伦理", "情色", "无码", "有码", "女优", "里番", "巨乳", "人妻",
+             "熟女", "丝袜", "美腿", "激情片", "偷拍", "欧美AV", "日本AV",
+             "国产AV", "成人", "福利姬", "肉欲", "艳舞")
+
+def is_adult(it):
+    blob = " ".join(str(it.get(k) or "") for k in ("vod_name", "vod_class", "type_name", "vod_remarks"))
+    return any(w in blob for w in BAD_WORDS)
 
 def fetch(url, timeout):
     req = urllib.request.Request(url, headers=UA)
@@ -17,7 +24,8 @@ def fetch(url, timeout):
 
 def slim_list(j):
     lst = j.get("list") or j.get("vodlist") or []
-    return [{k: it.get(k) for k in KEEP} for it in lst if isinstance(it, dict) and it.get("vod_name") and it.get("vod_play_url")]
+    return [{k: it.get(k) for k in KEEP} for it in lst
+            if isinstance(it, dict) and it.get("vod_name") and it.get("vod_play_url") and not is_adult(it)]
 
 def q(host, qs, timeout=10):
     url = "http://" + host + "/api.php/provide/vod?" + qs
