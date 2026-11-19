@@ -1,15 +1,14 @@
 {
- "updated": "2026-11-19T06:13:24.333444Z",
+ "updated": "2026-11-19T06:16:10.542952Z",
  "hosts": [
-  "xingba222.com",
   "ikunzyapi.com",
+  "xingba222.com",
+  "jkunzyapi.com",
+  "fhapi9.com",
   "api.zuidapi.com",
-  "hsckzy.xyz",
-  "cj.lziapi.com",
-  "zuidazy.me",
-  "www.jingpinx.com",
-  "beiyong.slapibf.com"
+  "bfzyapi.com"
  ],
  "probed": 68,
- "alive": 13
+ "alive": 18,
+ "clean": 6
 }
