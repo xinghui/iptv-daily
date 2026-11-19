@@ -23,10 +23,15 @@ def is_adult(it):
     blob = " ".join(str(it.get(k) or "") for k in ("vod_name", "vod_class", "type_name", "vod_remarks"))
     return any(w in blob for w in BAD_WORDS)
 
+def ok_item(it):
+    if is_adult(it):
+        return False
+    return bool(CLEAN_CAT.search(str(it.get("type_name") or "")) or CLEAN_CAT.search(str(it.get("vod_class") or "")))
+
 def slim_list(j):
     lst = j.get("list") or j.get("vodlist") or []
     return [{k: it.get(k) for k in KEEP} for it in lst
-            if isinstance(it, dict) and it.get("vod_name") and it.get("vod_play_url") and not is_adult(it)]
+            if isinstance(it, dict) and it.get("vod_name") and it.get("vod_play_url") and ok_item(it)]
 
 def q(host, qs, timeout=10):
     return slim_list(json.loads(fetch("http://" + host + "/api.php/provide/vod?" + qs, timeout).decode("utf-8", "replace")))
@@ -87,19 +92,19 @@ def dedup(items, cap):
     return out
 
 shelf_raw, idx_raw = [], []
-def job(arg):
-    host, tid, pg = arg
+def job2(arg):
+    host, qs = arg
     try:
-        return q(host, "ac=videolist&t=" + tid + "&pg=" + str(pg), 12)
+        return q(host, qs, 12)
     except Exception:
         return []
-jobs_shelf = [(h, c[0][0], 1) for h, s, c in kept[:4]]
-jobs_idx = [(h, cid, pg) for h, s, c in kept[:4] for cid, _ in c[:3] for pg in (1, 2, 3, 4)]
+jobs_shelf = [(h, "ac=videolist&h=24&pg=1") for h, s, c in kept[:4]]
+jobs_idx = [(h, "ac=videolist&pg=" + str(pg)) for h, s, c in kept[:4] for pg in range(1, 13)]
 with concurrent.futures.ThreadPoolExecutor(16) as ex:
-    for r_ in ex.map(job, jobs_shelf):
+    for r_ in ex.map(job2, jobs_shelf):
         shelf_raw.extend(r_)
 with concurrent.futures.ThreadPoolExecutor(16) as ex:
-    for r_ in ex.map(job, jobs_idx):
+    for r_ in ex.map(job2, jobs_idx):
         idx_raw.extend(r_)
 
 shelf = dedup(shelf_raw, 150)
