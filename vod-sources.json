@@ -1,15 +1,15 @@
 {
- "updated": "2026-11-19T06:10:39.163961Z",
+ "updated": "2026-11-19T06:13:24.333444Z",
  "hosts": [
-  "apilj.com",
-  "beiyong.slapibf.com",
-  "dadiapi.com",
-  "bfzyapi.com",
-  "api.zuidapi.com",
-  "cj.lziapi.com",
   "xingba222.com",
-  "cj.lzcaiji.com"
+  "ikunzyapi.com",
+  "api.zuidapi.com",
+  "hsckzy.xyz",
+  "cj.lziapi.com",
+  "zuidazy.me",
+  "www.jingpinx.com",
+  "beiyong.slapibf.com"
  ],
  "probed": 68,
- "alive": 22
+ "alive": 13
 }

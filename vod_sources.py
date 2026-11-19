@@ -11,7 +11,7 @@ UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
 KEEP = ("vod_id", "vod_name", "vod_pic", "vod_remarks", "vod_play_url",
         "vod_douban_score", "vod_area", "vod_year", "vod_class", "type_name")
 BAD_WORDS = ("伦理", "情色", "无码", "有码", "女优", "里番", "巨乳", "人妻",
-             "熟女", "丝袜", "美腿", "激情片", "偷拍", "欧美AV", "日本AV",
+             "强奸", "乱伦", "轮奸", "熟女", "丝袜", "美腿", "激情片", "偷拍", "欧美AV", "日本AV",
              "国产AV", "成人", "福利姬", "肉欲", "艳舞")
 
 def is_adult(it):
