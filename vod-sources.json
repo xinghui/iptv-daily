@@ -1,14 +1,12 @@
 {
- "updated": "2026-11-19T06:18:19.051032Z",
+ "updated": "2026-11-19T06:20:39.897231Z",
  "hosts": [
   "jkunzyapi.com",
   "fhapi9.com",
   "api.zuidapi.com",
-  "cj.lzcaiji.com",
-  "www.heiliaozyapi.com",
-  "ikunzyapi.com"
+  "www.heiliaozyapi.com"
  ],
  "probed": 68,
- "alive": 12,
- "clean": 6
+ "alive": 9,
+ "clean": 4
 }

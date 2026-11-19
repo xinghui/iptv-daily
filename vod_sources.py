@@ -26,12 +26,25 @@ def is_adult(it):
 def ok_item(it):
     if is_adult(it):
         return False
-    return bool(CLEAN_CAT.search(str(it.get("type_name") or "")) or CLEAN_CAT.search(str(it.get("vod_class") or "")))
+    tn = str(it.get("type_name") or "")
+    tc = str(it.get("vod_class") or "")
+    if not tn and not tc:
+        return True   # 无类目信息：放行（成人站已被类目树排除，黑名单兜底）
+    return bool(CLEAN_CAT.search(tn) or CLEAN_CAT.search(tc))
+
+def cap_eps(pu, cap=60):
+    parts = pu.split("#")
+    return pu if len(parts) <= cap else "#".join(parts[:cap])
 
 def slim_list(j):
     lst = j.get("list") or j.get("vodlist") or []
-    return [{k: it.get(k) for k in KEEP} for it in lst
-            if isinstance(it, dict) and it.get("vod_name") and it.get("vod_play_url") and ok_item(it)]
+    out = []
+    for it in lst:
+        if isinstance(it, dict) and it.get("vod_name") and it.get("vod_play_url") and ok_item(it):
+            slim_it = {k: it.get(k) for k in KEEP}
+            slim_it["vod_play_url"] = cap_eps(str(slim_it.get("vod_play_url") or ""))
+            out.append(slim_it)
+    return out
 
 def q(host, qs, timeout=10):
     return slim_list(json.loads(fetch("http://" + host + "/api.php/provide/vod?" + qs, timeout).decode("utf-8", "replace")))
