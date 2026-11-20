@@ -1,12 +1,12 @@
 {
- "updated": "2026-11-19T09:27:26.040453Z",
+ "updated": "2026-11-20T09:07:44.931200Z",
  "hosts": [
   "ikunzyapi.com",
-  "zuidazy.me",
   "api.zuidapi.com",
-  "fhapi9.com",
+  "zuidazy.me",
   "bfzyapi.com",
-  "jkunzyapi.com"
+  "fhapi9.com",
+  "www.jingpinx.com"
  ],
  "probed": 68,
  "alive": 14,
