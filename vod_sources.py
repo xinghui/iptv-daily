@@ -61,6 +61,15 @@ for s in sites:
         cands.append(m.group(1))
 cands = list(dict.fromkeys(cands))
 
+# ---- 1b) TVBox 配置生态候选（独立模块 tvbox_ingest.py，失败自动跳过不影响主管线）----
+try:
+    import tvbox_ingest
+    _tb = tvbox_ingest.collect(set(cands))
+    cands.extend(_tb)
+    print("tvbox_ingest: +%d %s" % (len(_tb), _tb[:5]))
+except Exception as _e:
+    print("tvbox_ingest: skip (%s)" % _e)
+
 def probe(host):
     t0 = time.time()
     try:
