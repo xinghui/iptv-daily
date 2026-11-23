@@ -79,6 +79,34 @@ for repo in REPOS:
     except Exception as e:
         print(f'fail {repo}: {e}')
 
+# ---- TVBox 配置直播源并入（独立模块 tvbox_ingest，失败自动跳过；$LR 等TVBox标记已剥）----
+try:
+    import tvbox_ingest as _ti
+    _added = 0
+    for _lu in _ti.collect_lives():
+        if _added >= 1500:
+            break
+        try:
+            _lt = fetch(_lu)
+            _lt = _ti.clean_m3u(_lt) if _lt.lstrip().startswith('#EXTM3U') else _ti.txt_to_m3u(_lt)
+            for _n, _u in parse(_lt):
+                if _added >= 1500:
+                    break
+                key = next((k for k in merged if norm(k) == norm(_n)), _n)
+                if key in merged and len(_n) < len(key):
+                    merged[_n] = merged.pop(key)
+                    key = _n
+                merged.setdefault(key, [])
+                if _u not in merged[key] and len(merged[key]) < 8:
+                    merged[key].append(_u)
+                    _added += 1
+            print('ok tvbox-live', _lu.rsplit('/', 1)[-1][:34])
+        except Exception as _e2:
+            print('live skip:', str(_e2)[:50])
+    print('tvbox lives: +%d urls' % _added)
+except Exception as _e:
+    print('tvbox lives skip:', _e)
+
 
 def check(url):
     """源验证：404/403=死；真直播=窗口滚动（二次抓取确认）；静态录像/ENDLIST=点播降级"""
