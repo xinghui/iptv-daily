@@ -1,12 +1,12 @@
 {
- "updated": "2026-11-25T10:24:57.553015Z",
+ "updated": "2026-11-26T10:00:18.939301Z",
  "hosts": [
-  "zuidazy.co",
-  "zuidazy.me",
-  "api.zuidapi.com",
-  "lzizy2.com",
   "ikunzyapi.com",
-  "www.lzzy.tv"
+  "api.zuidapi.com",
+  "zuidazy.me",
+  "zuidazy.co",
+  "lzizy2.com",
+  "by.bfzyapi.com"
  ],
  "probed": 109,
  "alive": 26,
